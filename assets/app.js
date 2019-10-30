@@ -1,12 +1,12 @@
+$(document).ready(function () {
+//adding search feature (does not work)
+var actor = $("#gif-input")
 var gifs = [];
 function alertgifName() {
   var gifName = $(this).attr("data-name");
 }
 function renderButtons() {
   for (var i = 0; i < gifs.length; i++) {
-
-    // Then dynamicaly generating buttons for each gif in the array
-    // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
     var a = $("<button>");
     a.addClass("gif");
     a.attr("data-name", gifs[i]);
@@ -22,11 +22,11 @@ $("#add-gif").on("click", function(event) {
 });
 $(document).on("click", ".gif", alertgifName);
 renderButtons();
+console.log(renderButtons)
+
+
+
     
-
-
-
-
     // Adding click event listen listener to all buttons
     $("button").on("click", function() {
       // Grabbing and storing the data-actor property value from the button
@@ -34,9 +34,7 @@ renderButtons();
 
       // Constructing a queryURL using the actor name
       var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=va98Ii4e8WfRbdMR0ItjXLCV2tTIVJRQ&q=" + actor + "&limit=10&offset=0&rating=G&lang=en";
-
         
-
       // Performing an AJAX request with the queryURL
       $.ajax({
         url: queryURL,
@@ -52,28 +50,35 @@ renderButtons();
 
           // Looping through each result item
           for (var i = 0; i < results.length; i++) {
-
-            // Creating and storing a div tag
             var actorDiv = $("<div>");
-
-            // Creating a paragraph tag with the result item's rating
             var p = $("<p>").text("Rating: " + results[i].rating);
-
-            // Creating and storing an image tag
             var actorImage = $("<img>");
-            // Setting the src attribute of the image to a property pulled off the result item
             actorImage.attr("src", results[i].images.fixed_height.url);
-
-            // Appending the paragraph and image tag to the actorDiv
             actorDiv.append(p);
             actorDiv.append(actorImage);
-
-            // Prependng the actorDiv to the HTML page in the "#gifs-appear-here" div
+    
             $("#gifs-appear-here").prepend(actorDiv);
+
+          
           }
+          
         });
 
-
+        // click to freeze / restart gif animation (does not work)
+    $("#gifs-appear-here").on("click", function() {
+        var state = $(this).attr("data-state");
+        if (state === "still") {
+          $(this).attr("src", $(this).attr("data-animate"));
+          $(this).attr("data-state", "animate");
+        } else {
+          $(this).attr("src", $(this).attr("data-still"));
+          $(this).attr("data-state", "still");
+        }
         
     });
 
+
+
+    })
+
+});
